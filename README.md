@@ -13,7 +13,7 @@ Items include computing devices such as computers, tablets or smartwatches, and/
 
 ### Must-have Features:
 
-1. Authentication: Login, register as seller, register as buyer
+1. Authentication: Login, register as seller, register as customer
 2. Registration of items for selling (name, category, sub-category, quantity, expected price)
 3. Order management: view, confirm orders
 4. Cart management: Add, remove, view items
@@ -71,4 +71,70 @@ Items include computing devices such as computers, tablets or smartwatches, and/
 			- Seller Contact(s)
 			- Seller Profile Image (optional)
 			- Seller Account Password (plaintext, over HTTPS, stored in DB as hash+salt)
-	- 
+
+### RDBMS Schema:
+- Entities:
+	- User
+		- Name
+		- Username
+		- E-Mail Address (optional)
+		- Profile Image (optional)
+		- Password
+		- ID
+		- Contact
+	- Customer (IS A User)
+		- Date of Registration
+		- Shipping Address (multi-valued)
+		- Payment Mode (composite) (multi-valued)
+			- Type
+			- Details
+	- Seller (IS A User)
+		- Company Name
+		- Contact (multi-valued)
+	- Item
+		- Name
+		- Type
+		- Category (multi-valued)
+		- Description
+		- Features (composite, multi-valued)
+			- Key
+			- Value
+- Relationships:
+	- _Item_ OFFERED BY / ASSOCIATED WITH _Seller_
+		- Quantity
+		- Expected Price
+	- _Customer_ GIVES RATING TO _Seller_
+		- Rating
+		- Feedback
+	- _Customer_ ADDS _Item_ PROVIDED BY _Seller_ TO CART
+		- Quantity
+	- _Customer_ PURCHASES _Item_ PROVIDED BY _Seller_ FOR ORDER
+		- Order ID
+		- Shipping Address
+- Relations
+	- Customer
+		-
+	- Seller
+		-
+	- Item
+		-
+	- Cart
+		-
+	- Order
+		-
+	- Transactions
+		-
+	- User
+		-
+	- Customer_Addresses
+		-
+	- Item_Associations
+		-
+	- Item_Categories
+		-
+	- Item_Assigned_Categories
+		-
+	- Item_Feature_Keys
+		-
+	- Item_Assigned_Feature_Keys
+		-
