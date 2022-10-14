@@ -37,7 +37,7 @@ Items include computing devices such as computers, tablets or smartwatches, and/
 - socket.io (Python, JS) for real-time updates
 - MySQL for DBMS
 
-### [API Description][docs/api_description.md]:
+### [API Description](docs/api_description.md):
 
 - Authentication:
 	- POST /api/auth/login: Login using an existing customer or seller account, init session
