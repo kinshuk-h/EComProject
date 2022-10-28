@@ -2,36 +2,34 @@
 # import time
 
 import flask
-# import dotenv
+import dotenv
 # from flask_httpauth   import HTTPTokenAuth
 # from flask_session    import Session
-# from flask_socketio   import SocketIO
-# from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 # from src import api, routes, utils
 from src import utils
 
 # Load the environment variables specific to the app.
-# dotenv.load_dotenv()
+dotenv.load_dotenv()
 
 app = flask.Flask(__name__)
 
-# app.config.update(
-#     SECRET_KEY                     = os.environ.get('SECRET_KEY', 'so_secret_much_wow'),
-#     SQLALCHEMY_TRACK_MODIFICATIONS = False,
-#     SQLALCHEMY_DATABASE_URI        = os.environ.get('DB_URL'),
-#     SESSION_TYPE                   = 'filesystem',
-#     SESSION_USE_SIGNER             = True
-# )
+app.config.update(
+    SECRET_KEY                     = os.environ.get('SECRET_KEY', 'so_secret_much_wow'),
+    SQLALCHEMY_TRACK_MODIFICATIONS = False,
+    SQLALCHEMY_DATABASE_URI        = os.environ.get('DB_URL'),
+    SESSION_TYPE                   = 'filesystem',
+    SESSION_USE_SIGNER             = True
+)
 
-# db       = SQLAlchemy(app)
+db       = SQLAlchemy(app)
 # auth     = HTTPTokenAuth(scheme='Bearer')
 # # Initialize a filesystem based server-side session
 # Session(app)
 
-# engine   = db.create_engine(app.config['SQLALCHEMY_DATABASE_URI'], { 'echo': False })
-# database = utils.database.get_instance(engine)
-
+engine   = db.create_engine(app.config['SQLALCHEMY_DATABASE_URI'], { 'echo': False })
+database = utils.database.get_instance(engine)
 
 # @app.template_filter()
 # def field(date, fmtstr):
