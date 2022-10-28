@@ -4,10 +4,11 @@ import flask
 from sqlalchemy import exc
 from werkzeug import exceptions
 
+from . import users
 # from . import users, organization, group, schedule
 
 __version__ = "1.0"
-__all__     = [  "auth" ]
+__all__     = [  "users" ]
 
 def create_blueprint(*args, **kwargs):
     blueprint = flask.Blueprint(
@@ -16,14 +17,14 @@ def create_blueprint(*args, **kwargs):
         url_prefix='/api'
     )
 
-    # @blueprint.errorhandler(exc.SQLAlchemyError)
-    # def handle_sql_exception(e):
-    #     return flask.jsonify({
-    #         'status': False,
-    #         'code'  : 500,
-    #         'name'  : "InternalServerError (SQLException)",
-    #         'error' : str(e)
-    #     }), 500
+    @blueprint.errorhandler(exc.SQLAlchemyError)
+    def handle_sql_exception(e):
+        return flask.jsonify({
+            'status': False,
+            'code'  : 500,
+            'name'  : "InternalServerError (SQLException)",
+            'error' : str(e)
+        }), 500
 
     @blueprint.errorhandler(exceptions.HTTPException)
     def handle_exception(e):
@@ -37,9 +38,9 @@ def create_blueprint(*args, **kwargs):
         response.content_type = "application/json"
         return response
 
-    # blueprint.register_blueprint(
-    #     users.create_blueprint(*args, **kwargs)
-    # )
+    blueprint.register_blueprint(
+        users.create_blueprint(*args, **kwargs)
+    )
     # blueprint.register_blueprint(
     #     organization.create_blueprint(*args, **kwargs)
     # )

@@ -1,14 +1,14 @@
-# import os
+import os
 # import time
 
 import flask
 import dotenv
-# from flask_httpauth   import HTTPTokenAuth
+from flask_httpauth   import HTTPTokenAuth
 # from flask_session    import Session
 from flask_sqlalchemy import SQLAlchemy
 
 # from src import api, routes, utils
-from src import utils
+from src import api, utils
 
 # Load the environment variables specific to the app.
 dotenv.load_dotenv()
@@ -24,7 +24,7 @@ app.config.update(
 )
 
 db       = SQLAlchemy(app)
-# auth     = HTTPTokenAuth(scheme='Bearer')
+auth     = HTTPTokenAuth(scheme='Bearer')
 # # Initialize a filesystem based server-side session
 # Session(app)
 
@@ -44,19 +44,22 @@ database = utils.database.get_instance(engine)
 #     elif session_token:
 #         flask.session.pop('user_token')
 
-# @auth.verify_token
-# def verify_token(token):
-#     for _token, data in tokens.items():
-#         if int(time.time()) - data['timestamp'] > 24 * 3600:
-#             del tokens[_token]
-#     if token in tokens:
-#         return tokens[token]
+tokens = {}
 
-# @auth.get_user_roles
-# def get_user_roles(user):
-#     if 'role' not in user:
-#         user['role'] = database.get_user_role(user['ID'])
-#     return user['role']
+@auth.verify_token
+def verify_token(token):
+    for _token, data in tokens.items():
+        if int(time.time()) - data['timestamp'] > 24 * 3600:
+            del tokens[_token]
+    if token in tokens:
+        return tokens[token]
+
+@auth.get_user_roles
+def get_user_roles(user):
+    if 'role' not in user:
+        # TODO: change
+        user['role'] = 'admin' # database.get_user_role(user['ID'])
+    return user['role']
 
 # Register the standard endpoints.
 # app.register_blueprint(
@@ -65,11 +68,11 @@ database = utils.database.get_instance(engine)
 #     )
 # )
 # Register the API endpoint.
-# app.register_blueprint(
-#     api.create_blueprint(
-#         auth, tokens, database,
-#     )
-# )
+app.register_blueprint(
+    api.create_blueprint(
+        auth, tokens, database,
+    )
+)
 
 @app.route("/playground", methods=["GET", "POST"])
 def playground():
