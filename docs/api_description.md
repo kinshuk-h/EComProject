@@ -13,7 +13,7 @@ The following API endpoints are provided, categorized as follows:
     - Headers:
         - Authentication: Bearer "<account_id>:<access_token>"
     - Returns:
-			Customer Account ID, New Access Token, Updated Expiration Duration (JSON)
+        Customer Account ID, New Access Token, Updated Expiration Duration (JSON)
 
 ### [Customers](api/customer.md):
 - PUT /api/customer/register: Register a new customer
