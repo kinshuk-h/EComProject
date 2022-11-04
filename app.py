@@ -56,6 +56,7 @@ def verify_token(token):
 @auth.get_user_roles
 def get_user_roles(user):
    if 'role' not in user:
+        # TODO: change
        user['role'] = 'user'
    return user['role']
 
