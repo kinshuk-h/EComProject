@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DATABASE=`cat .env | grep -o -p "(?<=DB_DATABASE)\w+"`
+DATABASE=`cat .env | grep -o -P --color=no "(?<=DB_DATABASE=)\w+"`
 
 show_help() {
     echo "usage: $0 [{run,start,help,install}]"
@@ -20,7 +20,8 @@ setup_app() {
     fi
     pip install -r requirements.txt;
     mysql -u root -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
-    if [ ! -f "${DATABASE}.sql" ]
+    if [[ ! -f "${DATABASE}.sql" ]]
+    then
         mysql -u root "${DATABASE}" < "${DATABASE}.sql";
     fi
 }
