@@ -68,7 +68,7 @@ def make_token(username: str, user_id: str):
     ).decode('ascii') + secrets.token_urlsafe(10)
     data = {
         'username': username,
-        'ID': user_id,
+        'user_id': user_id,
         'timestamp': int(time.time())
     }
     return token, data

@@ -23,9 +23,9 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
     @auth.login_required
     def view_user():
         user = auth.current_user()
-        result = database.get_user_by_id(user['ID'])
-        del result['password_Hash']
-        del result['password_Salt']
+        result = { **database.get_user_by_id(user['user_id']) }
+        del result['password_hash']
+        del result['password_salt']
         return flask.jsonify(result)
 
     @blueprint.route('/login', methods=[ 'POST' ])
@@ -36,16 +36,16 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
         result = database.get_user_by_ref(username)
         if not result:
             flask.abort(401, description="Failed to login user")
-        if not utils.verify_password(password, result.Password_Hash):
+        if not utils.verify_password(password, result.password_hash):
             flask.abort(401, description="Failed to login user")
 
-        token, data = utils.make_token(result.Username, result.ID)
+        token, data = utils.make_token(result.username, result.user_id)
         tokens[token] = data
 
         return flask.jsonify({
             'status': True,
             'code': 200,
-            'username': result.Username,
+            'username': result.username,
             'token': token
         }), 200
 
@@ -66,7 +66,7 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
 
         database.execute((database.user.insert(), params))
 
-        result = database.get_user_by_id(params['user_id'])
+        result = { **database.get_user_by_id(params['user_id']) }
         del result['password_hash']
         del result['password_salt']
         return flask.jsonify({
