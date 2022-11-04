@@ -19,8 +19,10 @@ setup_app() {
         source venv/bin/activate;
     fi
     pip install -r requirements.txt;
-    #mysql -u root -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
-    #mysql -u root "${DATABASE}" < "${DATABASE}.sql";
+    mysql -u root -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
+    if [ ! -f "${DATABASE}.sql" ]
+        mysql -u root "${DATABASE}" < "${DATABASE}.sql";
+    fi
 }
 
 run_app() {
