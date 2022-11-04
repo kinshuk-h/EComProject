@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+DB_USER=`cat .env | grep -o -P --color=no "(?<=DB_USER=)\w+"`
 DATABASE=`cat .env | grep -o -P --color=no "(?<=DB_DATABASE=)\w+"`
 
 show_help() {
@@ -19,9 +20,8 @@ setup_app() {
         source venv/bin/activate;
     fi
     pip install -r requirements.txt;
-    mysql -u root -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
-    if [[ ! -f "${DATABASE}.sql" ]]
-    then
+    mysql -u "${DB_USER}" -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
+    if ! [[ -f "${DATABASE}.sql" ]]; then
         mysql -u root "${DATABASE}" < "${DATABASE}.sql";
     fi
 }
