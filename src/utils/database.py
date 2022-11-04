@@ -20,7 +20,7 @@ class ProjectDatabase:
         self.engine          = database_engine
         self.meta            = sqlalchemy.MetaData(database_engine)
 
-        self.user            = sqlalchemy.Table('USER', self.meta, autoload=True)
+        self.user            = sqlalchemy.Table('user', self.meta, autoload=True)
 
     def execute(self, *queries):
         """ Executes the given set of queries, or a set of query sets.
@@ -31,7 +31,7 @@ class ProjectDatabase:
                 query tuples, each query set is executed as a single transaction.
             Query tuples consist of a parameterized SQL query object and the set of parameters
             to bind with the query during execution as a dictionary.
-        
+
         Returns:
             list[sqlalchemy.LegacyCursorResult]: Results of the queries for a single transaction.
             list[list[sqlalchemy.LegacyCursorResult]]: Results of the queries for multiple transactions.
@@ -63,7 +63,7 @@ class ProjectDatabase:
                         ]
 
 def get_instance(database_engine):
-    """ Returns the current instance of the AttendanceDatabase abstraction. """
+    """ Returns the current instance of the ProjectDatabase abstraction. """
     # pylint: disable=global-statement
     global __INSTANCE__
     if not __INSTANCE__:

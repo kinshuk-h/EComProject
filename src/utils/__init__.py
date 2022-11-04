@@ -118,8 +118,7 @@ def get_field(request, key, allow_null=False):
             flask.abort(400, description=f"Missing {key} field in the request")
     return value
 
-# from . import qrcode
-# from . import database
+from . import database
 
 __version__ = "1.0"
-# __all__     = [ "qrcode", "database" ]
+__all__     = [ "database" ]

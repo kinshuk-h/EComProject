@@ -24,9 +24,8 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
     def view_user():
         user = auth.current_user()
         result = database.get_user_by_id(user['ID'])
-        del result['Password_Hash']
-        del result['Password_Salt']
-        result['role'] = database.get_user_role(result['ID'])
+        del result['password_Hash']
+        del result['password_Salt']
         return flask.jsonify(result)
 
     @blueprint.route('/login', methods=[ 'POST' ])
@@ -54,27 +53,22 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
     def create_user():
         password  = utils.get_field(flask.request, 'password')
         hashed_pw, salt = utils.hash_password(password)
-        organization = utils.get_field(flask.request, 'organization', allow_null=True)
 
         params = {
-            'ID'           : utils.new_uuid(),
-            'Name'         : utils.get_field(flask.request, 'name'),
-            'Username'     : utils.get_field(flask.request, 'username'),
-            'Password_Hash': hashed_pw,
-            'Password_Salt': salt,
-            'Address'      : utils.get_field(flask.request, 'address'     , allow_null=True),
-            'Contact'      : utils.get_field(flask.request, 'contact'     , allow_null=True) or 0,
-            'Email'        : utils.get_field(flask.request, 'e-mail'      , allow_null=True),
-            'Designation'  : utils.get_field(flask.request, 'designation' , allow_null=True),
-            'OID'          : organization,
+            'user_id'      : None,
+            'name'         : utils.get_field(flask.request, 'name'),
+            'username'     : utils.get_field(flask.request, 'username'),
+            'password_hash': hashed_pw,
+            'password_salt': salt,
+            'contact'      : utils.get_field(flask.request, 'contact'     , allow_null=True) or 0,
+            'email'        : utils.get_field(flask.request, 'e-mail'      , allow_null=True),
         }
-        if not organization: params['OJoin_Date'] = None
 
         database.execute((database.user.insert(), params))
 
         result = database.get_user_by_id(params['ID'])
-        del result['Password_Hash']
-        del result['Password_Salt']
+        del result['password_hash']
+        del result['password_salt']
         return flask.jsonify({
             'status': True,
             'code': 200,
