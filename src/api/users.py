@@ -55,7 +55,7 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
         hashed_pw, salt = utils.hash_password(password)
 
         params = {
-            'user_id'      : None,
+            'user_id'      : utils.new_uuid(),
             'name'         : utils.get_field(flask.request, 'name'),
             'username'     : utils.get_field(flask.request, 'username'),
             'password_hash': hashed_pw,
@@ -66,7 +66,7 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
 
         database.execute((database.user.insert(), params))
 
-        result = database.get_user_by_id(params['ID'])
+        result = database.get_user_by_id(params['user_id'])
         del result['password_hash']
         del result['password_salt']
         return flask.jsonify({
