@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DATABASE=`cat .env | grep -o -p "(?<=DB_DATABASE)\w+"`
+
 show_help() {
     echo "usage: $0 [{run,start,help,install}]"
     echo ""
@@ -17,8 +19,8 @@ setup_app() {
         source venv/bin/activate;
     fi
     pip install -r requirements.txt;
-    #mysql -u root -e "DROP DATABASE IF EXISTS attendance; CREATE DATABASE attendance";
-    #mysql -u root attendance < "Attendance.sql";
+    #mysql -u root -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
+    #mysql -u root "${DATABASE}" < "${DATABASE}.sql";
 }
 
 run_app() {
@@ -37,7 +39,7 @@ snapshot_data() {
         source venv/bin/activate;
     fi
 
-    # mysqldump attendance > Attendance.sql
+    mysqldump "${DATABASE}" > "${DATABASE}.sql"
     pip freeze > requirements.txt
 }
 
