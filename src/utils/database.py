@@ -62,6 +62,25 @@ class ProjectDatabase:
                             for query in queries
                         ]
 
+    # Query abstractions
+
+    def get_user_by_id(self, user_id):
+        query = sql.select([ self.user ]) \
+            .where(self.user.c.user_id == user_id).limit(1)
+        return self.execute(query)[0].fetchone()
+
+    def get_user_by_ref(self, username_or_email):
+        query = sql.select([
+            self.user.c.user_id,
+            self.user.c.username,
+            self.user.c.password_hash,
+            self.user.c.password_salt
+        ]).where(
+            (self.user.c.username == username_or_email) |
+            (self.user.c.email == username_or_email)
+        ).limit(1)
+        return self.execute(query)[0].fetchone()
+
 def get_instance(database_engine):
     """ Returns the current instance of the ProjectDatabase abstraction. """
     # pylint: disable=global-statement
