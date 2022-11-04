@@ -21,8 +21,8 @@ setup_app() {
     fi
     pip install -r requirements.txt;
     mysql -u "${DB_USER}" -e "DROP DATABASE IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE}";
-    if ! [[ -f "${DATABASE}.sql" ]]; then
-        mysql -u root "${DATABASE}" < "${DATABASE}.sql";
+    if [[ -f "${DATABASE}.sql" ]]; then
+        mysql -u "${DB_USER}" "${DATABASE}" < "${DATABASE}.sql";
     fi
 }
 
@@ -31,7 +31,9 @@ run_app() {
         source venv/bin/activate;
     fi
 
-    export FLASK_ENV="${2:-production}"
+    if [[ "${1:-production}" =~ debug ]]; then
+        export FLASK_DEBUG=1
+    fi
     export FLASK_APP=app
 
     flask run
@@ -52,7 +54,7 @@ case "${ARG//-/}" in
         show_help
         ;;
     run|start)
-        run_app
+        run_app "${2:-production}"
         ;;
     i|install|restore)
         setup_app
