@@ -74,3 +74,5 @@ def create_blueprint(auth, tokens, database, *args, **kwargs):
             'code': 200,
             'data': result
         }), 200
+
+    return blueprint
